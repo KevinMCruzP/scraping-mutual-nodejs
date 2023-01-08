@@ -10,9 +10,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ScrapingMutual = void 0;
+const businessFunctions_1 = require("../business/businessFunctions");
 class ScrapingMutual {
     handle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            (0, businessFunctions_1.handleScrapingMutual)();
             return res.json({ message: "Hello World!!!!" });
         });
     }

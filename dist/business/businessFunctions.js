@@ -41,24 +41,23 @@ const puppeteer_1 = __importDefault(require("puppeteer"));
 const url = process.env.URL ||
     "https://www.asociaciondemutuales.cl/suseso/responsemutual.html?12.619.984-8?A?INSTITUTO%20DE%20NORMALIZACI%C3%93N%20PREVISIONAL%20(INSTITUTO%20SEGURIDAD%20LABORAL)%20(ISL)";
 const urlMutualSearch = "https://www.asociaciondemutuales.cl/suseso/mutualsearch.html";
-function handleSearchMutual({ rut, birthDate, }) {
+function handleSearchMutual({ rut = "", birthDate = "", }) {
     return __awaiter(this, void 0, void 0, function* () {
         let text = "";
         let textError = "";
-        console.log("rut: ", rut, " birthDate: ", birthDate);
         try {
+            console.log("this is the BOT🤖");
+            console.log("rut: ", rut, " birthDate: ", birthDate);
             const browser = yield puppeteer_1.default.launch();
-            console.log("this is the scrapping");
             // Create a new page
             const page = yield browser.newPage();
             yield page.goto(urlMutualSearch, { waitUntil: "networkidle2" });
-            console.log("Entre");
-            //Inserting data in the input rut
-            yield page.waitForSelector("#rutPersona");
-            yield page.$eval("input[id=rutPersona]", (el) => (el.value = rut));
-            //Inserting data in the input birth date person
-            yield page.waitForSelector("#fechaNacpers");
-            yield page.$eval("input[id=fechaNacpers]", (el) => (el.value = "25/02/1996"));
+            //Inserting data in the input rut and birthDate
+            yield page.evaluate(({ rut, birthDate }) => {
+                document.querySelector("input[id=rutPersona]").value =
+                    rut;
+                document.querySelector("input[id=fechaNacpers]").value = birthDate;
+            }, { rut, birthDate });
             //Click on the button submit
             const button = yield page.waitForSelector("#envParams");
             yield button.click();
@@ -131,9 +130,9 @@ function handleScrapingMutual() {
             });
             console.log("gpuArr", gpuArr);
             console.log(`You have scraped ${gpuArr.length} registries`);
-            return gpuArr;
             //Close browser.
             yield browser.close();
+            return gpuArr;
         }
         catch (_a) {
             console.error;
